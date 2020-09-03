@@ -31,9 +31,15 @@ async function validateToken() {
 }
 
 async function checkUpdate() {
-  const res = await axios({
-    url: ''
-  });
+  try {
+    const res = await axios({
+      url: 'https://raw.githubusercontent.com/sadboilogan/discordroles/master/config.json'
+    });
+    const hasNewVersion = res.data.version !== config.version;
+    if (hasNewVersion) console.log('^1[discordroles] discordroles is not up to date. download the latest version at:\n  - https://github.com/sadboilogan/discordroles^7\n');
+  } catch(err) {
+    console.log('^1[discordroles] failed to check version^7\n');
+  }
 }
 
 function getUserDiscord(user) {
@@ -52,3 +58,4 @@ exports('userHasRole', (user, role, ...args) => {
 });
 
 validateToken();
+checkUpdate();
