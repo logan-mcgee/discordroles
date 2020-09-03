@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@citizenfx/server": "^1.0.2915-1",
+    "axios": "^0.20.0"
+  }
+}
