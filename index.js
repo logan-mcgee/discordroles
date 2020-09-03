@@ -44,17 +44,18 @@ async function checkUpdate() {
 }
 
 function getUserDiscord(user) {
+  if (typeof user === 'string') return user;
   for (let idIndex = 0; idIndex <= GetNumPlayerIdentifiers(user); idIndex ++) {
     if (GetPlayerIdentifier(user, idIndex).indexOf('discord:') !== -1) return GetPlayerIdentifier(user, idIndex).replace('discord:', '');
   }
 }
 
 exports('userHasRole', (user, role, ...args) => {
-  const isArgGuild = typeof args[2] === 'string';
-  const selectedGuild = isArgGuild ? args[2] : config.discordData.guild;
+  const isArgGuild = typeof args[0] === 'string';
+  const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
   axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
     const hasRole = typeof role === 'string' ? res.data.roles.includes(role) : res.data.roles.some((curRole, index) => res.data.roles.includes(role[index]));
-    isArgGuild ? args[3](hasRole) : args[2](hasRole);
+    isArgGuild ? args[1](hasRole) : args[0](hasRole);
   });
 });
 
