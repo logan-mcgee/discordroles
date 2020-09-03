@@ -1,14 +1,16 @@
-fx_version "bodacious"
-games { "gta5", "rdr3" }
+fx_version 'bodacious'
+games { 'gta5', 'rdr3' }
 
-author "logan. (Illusive)"
-description "Allows for discord and fivem to interact"
-version "1.0.0"
+author 'logan. (Illusive)'
+description 'Allows for discord and fivem to interact'
+version '1.0.0'
 
 server_scripts {
-  "index.js",
+  'index.js',
 }
 
 server_exports {
-  "userHasRole",
+  'isRolePresent',
+  'getUserRoles',
+  'getUserData',
 }
