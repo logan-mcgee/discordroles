@@ -50,12 +50,31 @@ function getUserDiscord(user) {
   }
 }
 
-exports('userHasRole', (user, role, ...args) => {
+exports('isRolePresent', (user, role, ...args) => {
+  if (!canRun) return console.log('^1[discordroles] authentication error, exports wont run.^7');
   const isArgGuild = typeof args[0] === 'string';
   const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
   axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
     const hasRole = typeof role === 'string' ? res.data.roles.includes(role) : res.data.roles.some((curRole, index) => res.data.roles.includes(role[index]));
-    isArgGuild ? args[1](hasRole) : args[0](hasRole);
+    isArgGuild ? args[1](hasRole, res.data.roles) : args[0](hasRole, res.data.roles);
+  });
+});
+
+exports('getUserRoles', (user, ...args) => {
+  if (!canRun) return console.log('^1[discordroles] authentication error, exports wont run.^7');
+  const isArgGuild = typeof args[0] === 'string';
+  const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
+  axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
+    isArgGuild ? args[1](res.data.roles) : args[0](res.data.roles);
+  });
+});
+
+exports('getUserData', (user, ...args) => {
+  if (!canRun) return console.log('^1[discordroles] authentication error, exports wont run.^7');
+  const isArgGuild = typeof args[0] === 'string';
+  const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
+  axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
+    isArgGuild ? args[1](res.data) : args[0](res.data);
   });
 });
 
