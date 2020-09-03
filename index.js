@@ -37,8 +37,9 @@ async function checkUpdate() {
     });
     const hasNewVersion = res.data.version !== config.version;
     if (hasNewVersion) console.log('^1[discordroles] discordroles is not up to date. download the latest version at:\n  - https://github.com/sadboilogan/discordroles^7\n');
+    else console.log('\n^2[discordroles] discordroles is up to date.^7');
   } catch(err) {
-    console.log('^1[discordroles] failed to check version^7\n');
+    console.log('\n^1[discordroles] failed to check version^7');
   }
 }
 
