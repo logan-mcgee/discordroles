@@ -2,7 +2,6 @@ const errorCodes = {
   400: 'The request was improperly formatted, or the server couldn\'t understand it.',
   401: 'The Authorization header was missing or invalid.',
   403: 'The Authorization token you passed did not have permission to the resource.',
-  404: "The resource at the location specified doesn't exist.",
   405: 'The HTTP method used is not valid for the location specified.',
   429: 'You are being rate limited, see Rate Limits.',
   502: 'There was not a gateway available to process your request. Wait a bit and retry.'

@@ -2,7 +2,7 @@
 const axios = require('axios').default;
 const config = require('./config.json');
 const { getError } = require('./errors');
-canRun = false;
+let canRun = false;
 
 axios.defaults.baseURL = 'https://discord.com/api/v6';
 axios.defaults.headers = {
@@ -12,13 +12,14 @@ axios.defaults.headers = {
 
 if (config.debug) {
   axios.interceptors.request.use(function (config) {
-    console.log(`^3[discordroles | DEBUG] ${config.method} ${config.baseURL}${config.url}^7\n`);
+    console.log(`^3[discordroles | DEBUG] ${config.method} ${config.url}^7\n`);
     return config;
   });  
 }
 
 axios.interceptors.response.use((res) => (res), (err) => {
-  console.log(`\n^1[discordroles] request to discord API failed.\n  • ${getError(err)}^7\n`);
+  if (err.response.status !== 404)
+    console.log(`\n^1[discordroles] request to discord API failed.\n  • ${getError(err)}^7\n`);
   return Promise.reject(err);
 });
 
@@ -57,6 +58,10 @@ exports('isRolePresent', (user, role, ...args) => {
   axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
     const hasRole = typeof role === 'string' ? res.data.roles.includes(role) : res.data.roles.some((curRole, index) => res.data.roles.includes(role[index]));
     isArgGuild ? args[1](hasRole, res.data.roles) : args[0](hasRole, res.data.roles);
+  }).catch((err) => {
+    if (err.response.status === 404) {
+      isArgGuild ? args[1](false) : args[0](false);
+    }
   });
 });
 
@@ -66,6 +71,10 @@ exports('getUserRoles', (user, ...args) => {
   const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
   axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
     isArgGuild ? args[1](res.data.roles) : args[0](res.data.roles);
+  }).catch((err) => {
+    if (err.response.status === 404) {
+      isArgGuild ? args[1](false) : args[0](false);
+    }
   });
 });
 
@@ -75,6 +84,10 @@ exports('getUserData', (user, ...args) => {
   const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
   axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
     isArgGuild ? args[1](res.data) : args[0](res.data);
+  }).catch((err) => {
+    if (err.response.status === 404) {
+      isArgGuild ? args[1](false) : args[0](false);
+    }
   });
 });
 
