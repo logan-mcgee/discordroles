@@ -1,6 +1,6 @@
 {
   "debug": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "discordData": {
     "token": "token",
     "guild": "primary guild"
