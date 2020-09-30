@@ -46,16 +46,20 @@ async function checkUpdate() {
 
 function getUserDiscord(user) {
   if (typeof user === 'string') return user;
+  if (!GetPlayerName(user)) return false;
   for (let idIndex = 0; idIndex <= GetNumPlayerIdentifiers(user); idIndex ++) {
     if (GetPlayerIdentifier(user, idIndex).indexOf('discord:') !== -1) return GetPlayerIdentifier(user, idIndex).replace('discord:', '');
   }
+  return false;
 }
 
 exports('isRolePresent', (user, role, ...args) => {
   if (!canRun) return console.log('^1[discordroles] authentication error, exports wont run.^7');
   const isArgGuild = typeof args[0] === 'string';
   const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
-  axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
+  const discordUser = getUserDiscord(user); 
+  if (!discordUser) return isArgGuild ? args[1](false) : args[0](false);
+  axios(`/guilds/${selectedGuild}/members/${discordUser}`).then((res) => {
     const hasRole = typeof role === 'string' ? res.data.roles.includes(role) : res.data.roles.some((curRole, index) => res.data.roles.includes(role[index]));
     isArgGuild ? args[1](hasRole, res.data.roles) : args[0](hasRole, res.data.roles);
   }).catch((err) => {
@@ -69,7 +73,9 @@ exports('getUserRoles', (user, ...args) => {
   if (!canRun) return console.log('^1[discordroles] authentication error, exports wont run.^7');
   const isArgGuild = typeof args[0] === 'string';
   const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
-  axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
+  const discordUser = getUserDiscord(user); 
+  if (!discordUser) return isArgGuild ? args[1](false) : args[0](false);
+  axios(`/guilds/${selectedGuild}/members/${discordUser}`).then((res) => {
     isArgGuild ? args[1](res.data.roles) : args[0](res.data.roles);
   }).catch((err) => {
     if (err.response.status === 404) {
@@ -82,7 +88,9 @@ exports('getUserData', (user, ...args) => {
   if (!canRun) return console.log('^1[discordroles] authentication error, exports wont run.^7');
   const isArgGuild = typeof args[0] === 'string';
   const selectedGuild = isArgGuild ? args[0] : config.discordData.guild;
-  axios(`/guilds/${selectedGuild}/members/${getUserDiscord(user)}`).then((res) => {
+  const discordUser = getUserDiscord(user); 
+  if (!discordUser) return isArgGuild ? args[1](false) : args[0](false);
+  axios(`/guilds/${selectedGuild}/members/${discordUser}`).then((res) => {
     isArgGuild ? args[1](res.data) : args[0](res.data);
   }).catch((err) => {
     if (err.response.status === 404) {
