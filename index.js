@@ -4,7 +4,7 @@ const config = require('./config.json');
 const { getError } = require('./errors');
 let canRun = false;
 
-axios.defaults.baseURL = 'https://discord.com/api/v6';
+axios.defaults.baseURL = 'https://discord.com/api/v8';
 axios.defaults.headers = {
   Authorization: `Bot ${config.discordData.token}`,
   'Content-Type': 'application/json'
